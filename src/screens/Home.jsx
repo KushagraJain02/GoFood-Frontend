@@ -5,14 +5,14 @@ import Card from "../components/Card";
 
 const Home = () => {
   const [search, setSearch] = useState("");
-  const [foodCat, setFoodCat] = useState([]);
+  const [foodCat, setFoodCat] = useState([]); // ✅ Correct state name
   const [foodItem, setFoodItem] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const response = await fetch(
-          "https://your-backend.vercel.app/api/foodData",
+          "https://your-backend.vercel.app/api/foodData", // ✅ Replace with your real deployed backend URL
           {
             method: "POST",
             headers: {
@@ -22,26 +22,21 @@ const Home = () => {
         );
 
         const data = await response.json();
-
-        console.log("📦 Fetched Data from backend:", data); // <--- Check this in browser dev tools (Network tab)
+        console.log("📦 Fetched Data from backend:", data);
 
         if (Array.isArray(data) && data.length === 2) {
           setFoodItem(data[0] || []);
-          setFoodCategory(data[1] || []);
+          setFoodCat(data[1] || []); // ✅ Fixed incorrect setFoodCategory
         } else {
           console.error("❌ Unexpected response format:", data);
           setFoodItem([]);
-          setFoodCategory([]);
+          setFoodCat([]);
         }
       } catch (error) {
         console.error("🚨 Backend fetch failed:", error);
       }
     };
 
-    loadData();
-  }, []);
-
-  useEffect(() => {
     loadData();
   }, []);
 
@@ -124,7 +119,7 @@ const Home = () => {
         </button>
       </div>
 
-      {/* Search Bar below Carousel */}
+      {/* Search Bar */}
       <div className="container mt-4">
         <div className="d-flex justify-content-center">
           <input

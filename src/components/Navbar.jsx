@@ -74,7 +74,7 @@ const Navbar = () => {
               >
                 My Cart
                 <Badge pill bg="danger" className="ms-2">
-                  {data.length}
+                  {Array.isArray(data) ? data.length : 0}
                 </Badge>
               </button>
 
