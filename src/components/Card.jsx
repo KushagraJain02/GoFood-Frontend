@@ -5,7 +5,7 @@ const Card = (props) => {
   const dispatch = useDispatchCart();
   const data = useCart();
   const priceRef = useRef();
-  const options = props.options;
+  const options = props.options || {};
   const priceOptions = Object.keys(options);
   const [qty, setqty] = useState(1);
   const [size, setsize] = useState("");

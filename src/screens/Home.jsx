@@ -9,12 +9,15 @@ const Home = () => {
   const [foodItem, setFoodItem] = useState([]);
 
   const loadData = async () => {
-    let response = await fetch("https://gofoodbackend-sigma.vercel.app/api/foodData", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    let response = await fetch(
+      "https://gofoodbackend-sigma.vercel.app/api/foodData",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     response = await response.json();
 
@@ -31,13 +34,24 @@ const Home = () => {
       <Navbar />
 
       {/* Carousel */}
-      <div id="carouselExampleFade" className="carousel slide carousel-fade" data-bs-ride="carousel">
-        <div className="carousel-inner" style={{ maxHeight: "500px", overflow: "hidden" }}>
+      <div
+        id="carouselExampleFade"
+        className="carousel slide carousel-fade"
+        data-bs-ride="carousel"
+      >
+        <div
+          className="carousel-inner"
+          style={{ maxHeight: "500px", overflow: "hidden" }}
+        >
           <div className="carousel-item active">
             <img
               src="../images/burger.jpg"
               className="d-block w-100"
-              style={{ filter: "brightness(40%)", objectFit: "cover", height: "500px" }}
+              style={{
+                filter: "brightness(40%)",
+                objectFit: "cover",
+                height: "500px",
+              }}
               alt="Burger"
             />
           </div>
@@ -45,7 +59,11 @@ const Home = () => {
             <img
               src="../images/pastry.jpg"
               className="d-block w-100"
-              style={{ filter: "brightness(40%)", objectFit: "cover", height: "500px" }}
+              style={{
+                filter: "brightness(40%)",
+                objectFit: "cover",
+                height: "500px",
+              }}
               alt="Pastry"
             />
           </div>
@@ -53,19 +71,39 @@ const Home = () => {
             <img
               src="../images/barbeque.jpg"
               className="d-block w-100"
-              style={{ filter: "brightness(40%)", objectFit: "cover", height: "500px" }}
+              style={{
+                filter: "brightness(40%)",
+                objectFit: "cover",
+                height: "500px",
+              }}
               alt="BBQ"
             />
           </div>
         </div>
 
         {/* Carousel Controls */}
-        <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
-          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+        <button
+          className="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselExampleFade"
+          data-bs-slide="prev"
+        >
+          <span
+            className="carousel-control-prev-icon"
+            aria-hidden="true"
+          ></span>
           <span className="visually-hidden">Previous</span>
         </button>
-        <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
-          <span className="carousel-control-next-icon" aria-hidden="true"></span>
+        <button
+          className="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselExampleFade"
+          data-bs-slide="next"
+        >
+          <span
+            className="carousel-control-next-icon"
+            aria-hidden="true"
+          ></span>
           <span className="visually-hidden">Next</span>
         </button>
       </div>
@@ -99,8 +137,18 @@ const Home = () => {
                         item.name.toLowerCase().includes(search.toLowerCase())
                     )
                     .map((filterItem) => (
-                      <div key={filterItem._id} className="col-12 col-md-6 col-lg-3 d-flex justify-content-center">
-                        <Card foodItem={filterItem} options={filterItem.options[0]} />
+                      <div
+                        key={filterItem._id}
+                        className="col-12 col-md-6 col-lg-3 d-flex justify-content-center"
+                      >
+                        <Card
+                          foodItem={filterItem}
+                          options={
+                            Array.isArray(filterItem.options)
+                              ? filterItem.options[0]
+                              : {}
+                          }
+                        />
                       </div>
                     ))
                 ) : (
