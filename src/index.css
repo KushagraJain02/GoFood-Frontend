@@ -1,0 +1,14 @@
+body {
+  font-family: "NHaasGroteskDSPro-65Md" !important;
+}
+
+#carousel {
+  max-height: 500px;
+}
+
+.carousel-item>img {
+  object-fit: cover;
+  height: 500px;
+  width: 100%;
+  object-position: center;
+}
