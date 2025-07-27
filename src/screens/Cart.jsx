@@ -11,7 +11,7 @@ const Cart = () => {
 
   const handleCheckOut = async () => {
     let userEmail = localStorage.getItem("userEmail");
-    let response = await fetch("http://gofoodbackend-sigma.vercel.app/api/orderData", {
+    let response = await fetch("https://gofoodbackend-sigma.vercel.app/api/orderData", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

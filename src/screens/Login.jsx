@@ -11,7 +11,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://gofoodbackend-sigma.vercel.app/api/loginuser", {
+    const response = await fetch("https://gofoodbackend-sigma.vercel.app/api/loginuser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
