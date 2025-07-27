@@ -19,6 +19,15 @@ const Home = () => {
       }
     );
 
+    useEffect(() => {
+      fetch("https://your-backend.vercel.app/api/foodData")
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Fetched data:", data); // check this on deployed site
+        })
+        .catch((err) => console.error("Backend fetch error:", err));
+    }, []);
+
     response = await response.json();
 
     setFoodItem(response[0]);
