@@ -5,7 +5,7 @@ const Cart = () => {
   let data = useCart();
   let dispatch = useDispatchCart();
 
-  if (data.length === 0) {
+  if (!data && data.length === 0) {
     return <div className="empty-cart">The Cart is Empty!</div>;
   }
 

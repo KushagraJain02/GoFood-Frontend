@@ -3,7 +3,7 @@ import Navbar from "./../components/Navbar";
 import Footer from "./Footer";
 
 const MyOrder = () => {
-  const [orderData, setOrderData] = useState(null);
+  const [orderData, setOrderData] = useState({ orderData: { order_data: [] } });
 
   const fetchMyOrder = async () => {
     try {
@@ -30,6 +30,8 @@ const MyOrder = () => {
     fetchMyOrder();
   }, []);
 
+  const allOrders = orderData?.orderData?.order_data || [];
+
   return (
     <div>
       <Navbar />
@@ -37,8 +39,8 @@ const MyOrder = () => {
         <h2 className="mb-4 text-center text-light">🧾 My Orders</h2>
 
         <div className="row">
-          {orderData?.orderData?.order_data?.length > 0 ? (
-            orderData.orderData.order_data
+          {allOrders.length > 0 ? (
+            allOrders
               .slice()
               .reverse()
               .map((orderGroup, i) => (
@@ -97,5 +99,3 @@ const MyOrder = () => {
     </div>
   );
 };
-
-export default MyOrder;
