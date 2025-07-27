@@ -8,31 +8,38 @@ const Home = () => {
   const [foodCat, setFoodCat] = useState([]);
   const [foodItem, setFoodItem] = useState([]);
 
-  const loadData = async () => {
-    let response = await fetch(
-      "https://gofoodbackend-sigma.vercel.app/api/foodData",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await fetch(
+          "https://your-backend.vercel.app/api/foodData",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        console.log("📦 Fetched Data from backend:", data); // <--- Check this in browser dev tools (Network tab)
+
+        if (Array.isArray(data) && data.length === 2) {
+          setFoodItem(data[0] || []);
+          setFoodCategory(data[1] || []);
+        } else {
+          console.error("❌ Unexpected response format:", data);
+          setFoodItem([]);
+          setFoodCategory([]);
+        }
+      } catch (error) {
+        console.error("🚨 Backend fetch failed:", error);
       }
-    );
+    };
 
-    useEffect(() => {
-      fetch("https://your-backend.vercel.app/api/foodData")
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("Fetched data:", data); // check this on deployed site
-        })
-        .catch((err) => console.error("Backend fetch error:", err));
-    }, []);
-
-    response = await response.json();
-
-    setFoodItem(response[0]);
-    setFoodCat(response[1]);
-  };
+    loadData();
+  }, []);
 
   useEffect(() => {
     loadData();
