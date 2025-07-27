@@ -7,15 +7,18 @@ const MyOrder = () => {
 
   const fetchMyOrder = async () => {
     try {
-      const res = await fetch("https://gofoodbackend-sigma.vercel.app/api/myOrderData", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: localStorage.getItem("userEmail"),
-        }),
-      });
+      const res = await fetch(
+        "https://gofoodbackend-sigma.vercel.app/api/myOrderData",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: localStorage.getItem("userEmail"),
+          }),
+        }
+      );
 
       if (!res.ok) throw new Error("Failed to fetch");
 
@@ -99,3 +102,5 @@ const MyOrder = () => {
     </div>
   );
 };
+
+export default MyOrder;
