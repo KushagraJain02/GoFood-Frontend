@@ -9,13 +9,13 @@ const Card = (props) => {
   const options = props.options ?? {};
   const [qty, setqty] = useState(1);
   const [size, setsize] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false); // <-- New state
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     setsize(priceRef.current.value);
   }, []);
 
-  const finalPrice = qty * parseInt(options[size]);
+  const finalPrice = qty * parseInt(options[size] ?? 0);
 
   const handleAddToCart = async () => {
     const food = data.find((item) => item.id === props.foodItem._id);
@@ -26,7 +26,7 @@ const Card = (props) => {
           type: "UPDATE",
           id: props.foodItem._id,
           price: finalPrice,
-          qty: qty,
+          qty,
         });
       } else {
         await dispatch({
@@ -34,8 +34,8 @@ const Card = (props) => {
           id: props.foodItem._id,
           name: props.foodItem.name,
           price: finalPrice,
-          qty: qty,
-          size: size,
+          qty,
+          size,
         });
       }
     } else {
@@ -44,37 +44,35 @@ const Card = (props) => {
         id: props.foodItem._id,
         name: props.foodItem.name,
         price: finalPrice,
-        qty: qty,
-        size: size,
+        qty,
+        size,
       });
     }
 
-    // Show success message
     setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 2000); // auto-hide after 2s
+    setTimeout(() => setShowSuccess(false), 2000);
   };
 
   return (
-    <div className="d-flex justify-content-center my-4">
+    <div className="d-flex justify-content-center my-4 position-relative">
+      {/* Floating success toast */}
+      {showSuccess && (
+        <div
+          className="position-absolute top-0 start-50 translate-middle-x alert alert-success text-center py-2 px-3 shadow rounded-pill"
+          style={{ zIndex: 20 }}
+        >
+          ✅ Added to Cart
+        </div>
+      )}
+
       <div
         className="card shadow-sm border-0 rounded-4 dark-card"
-        style={{
-          width: "18rem",
-          backgroundColor: "#2c2f33",
-          color: "#f1f1f1",
-        }}
+        style={{ width: "18rem", backgroundColor: "#2c2f33", color: "#f1f1f1" }}
       >
-        {/* Success Alert */}
-        {showSuccess && (
-          <div className="alert alert-success text-center rounded-0 mb-0 py-2">
-            Item added successfully!
-          </div>
-        )}
-
         <img
           src={props.foodItem.img}
           className="card-img-top rounded-top-4"
-          alt={props.foodItem.name}
+          alt={props.foodItem?.name || "Food image"}
           style={{
             height: "180px",
             objectFit: "cover",
@@ -90,9 +88,9 @@ const Card = (props) => {
             <select
               className="form-select bg-dark text-white border-success"
               style={{ width: "48%" }}
-              onChange={(e) => setqty(e.target.value)}
+              onChange={(e) => setqty(Number(e.target.value))}
             >
-              {Array.from(Array(6), (_, i) => (
+              {Array.from({ length: 6 }, (_, i) => (
                 <option key={i + 1} value={i + 1}>
                   Qty: {i + 1}
                 </option>

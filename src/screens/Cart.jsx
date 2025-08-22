@@ -2,36 +2,50 @@ import React from "react";
 import { useCart, useDispatchCart } from "../components/ContextReducer";
 
 const Cart = () => {
-  let data = useCart();
-  let dispatch = useDispatchCart();
+  const data = useCart();
+  const dispatch = useDispatchCart();
 
-  if (!data && data.length === 0) {
-    return <div className="empty-cart">The Cart is Empty!</div>;
+  // ✅ Fix: use OR to correctly handle empty cart
+  if (!data || data.length === 0) {
+    return (
+      <div className="empty-cart text-center my-5">The Cart is Empty!</div>
+    );
   }
 
   const handleCheckOut = async () => {
-    let userEmail = localStorage.getItem("userEmail");
-    let response = await fetch("https://gofoodbackend-sigma.vercel.app/api/orderData", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        order_data: data,
-        email: userEmail,
-        order_date: new Date().toDateString(),
-      }),
-    });
+    const userEmail = localStorage.getItem("userEmail");
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orderData`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            order_data: data,
+            email: userEmail,
+            order_date: new Date().toDateString(),
+          }),
+        }
+      );
 
-    if (response.status === 200) {
-      dispatch({ type: "DROP" });
+      if (response.ok) {
+        dispatch({ type: "DROP" });
+        alert("Order placed successfully!");
+      } else {
+        alert("Failed to place order.");
+      }
+    } catch (error) {
+      console.error("Checkout failed:", error);
+      alert("Something went wrong. Please try again.");
     }
   };
 
-  let totalPrice = data.reduce((total, food) => total + food.price, 0);
+  const totalPrice = data.reduce((total, food) => total + food.price, 0);
 
   return (
-    <div className="cart-container container m-auto mt-5 table-responsive table-responsive-sm table-responsive-md">
+    <div className="cart-container container m-auto mt-5 table-responsive">
       <table className="table cart-table table-hover text-light">
         <thead>
           <tr>
@@ -52,16 +66,15 @@ const Cart = () => {
               <td>{food.size}</td>
               <td>₹{food.price}</td>
               <td>
-                <button type="button" className="btn p-0">
+                <button
+                  type="button"
+                  className="btn p-0"
+                  onClick={() => dispatch({ type: "REMOVE", index })}
+                >
                   <img
                     src="../trash.png"
                     alt="delete"
-                    style={{
-                      width: "24px",
-                      height: "24px",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => dispatch({ type: "REMOVE", index })}
+                    style={{ width: "24px", height: "24px", cursor: "pointer" }}
                   />
                 </button>
               </td>
@@ -70,8 +83,13 @@ const Cart = () => {
         </tbody>
       </table>
 
-      <div className="total-price">Total Price: ₹{totalPrice}/-</div>
-      <button className="checkout-btn" onClick={handleCheckOut}>
+      <div className="total-price fw-bold fs-5 mt-3">
+        Total Price: ₹{totalPrice}/-
+      </div>
+      <button
+        className="checkout-btn btn btn-success mt-3"
+        onClick={handleCheckOut}
+      >
         Check Out
       </button>
     </div>

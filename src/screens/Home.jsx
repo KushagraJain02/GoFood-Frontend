@@ -5,14 +5,14 @@ import Card from "../components/Card";
 
 const Home = () => {
   const [search, setSearch] = useState("");
-  const [foodCat, setFoodCat] = useState([]); // ✅ Correct state name
+  const [foodCat, setFoodCat] = useState([]);
   const [foodItem, setFoodItem] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const response = await fetch(
-          "https://your-backend.vercel.app/api/foodData", // ✅ Replace with your real deployed backend URL
+          `${import.meta.env.VITE_BACKEND_URL}/api/foodData`,
           {
             method: "POST",
             headers: {
@@ -26,7 +26,7 @@ const Home = () => {
 
         if (Array.isArray(data) && data.length === 2) {
           setFoodItem(data[0] || []);
-          setFoodCat(data[1] || []); // ✅ Fixed incorrect setFoodCategory
+          setFoodCat(data[1] || []);
         } else {
           console.error("❌ Unexpected response format:", data);
           setFoodItem([]);
@@ -34,6 +34,8 @@ const Home = () => {
         }
       } catch (error) {
         console.error("🚨 Backend fetch failed:", error);
+        setFoodItem([]);
+        setFoodCat([]);
       }
     };
 
@@ -135,16 +137,18 @@ const Home = () => {
       {/* Food Sections */}
       <div className="container mt-5">
         {foodCat.length > 0 &&
-          foodCat.map((data) => (
-            <div className="mb-5" key={data._id}>
-              <h3 className="fw-bold mb-3 text-info">{data.categoryName}</h3>
+          foodCat.map((category) => (
+            <div className="mb-5" key={category._id}>
+              <h3 className="fw-bold mb-3 text-info">
+                {category.categoryName}
+              </h3>
               <hr className="border-secondary" />
               <div className="row g-4">
                 {foodItem.length > 0 ? (
                   foodItem
                     .filter(
                       (item) =>
-                        item.categoryName === data.categoryName &&
+                        item.categoryName === category.categoryName &&
                         item.name.toLowerCase().includes(search.toLowerCase())
                     )
                     .map((filterItem) => (
@@ -155,7 +159,8 @@ const Home = () => {
                         <Card
                           foodItem={filterItem}
                           options={
-                            Array.isArray(filterItem.options)
+                            Array.isArray(filterItem.options) &&
+                            filterItem.options[0]
                               ? filterItem.options[0]
                               : {}
                           }

@@ -19,28 +19,26 @@ const reducer = (state, action) => {
       ];
 
     case "REMOVE":
-      let newArr = [...state];
-      newArr.splice(action.index, 1);
-      return newArr;
+      return state.filter((_, index) => index !== action.index);
 
     case "DROP":
-      let empArray = [];
-      return empArray;
+      return [];
 
     case "UPDATE":
       return state.map((food) => {
         if (food.id === action.id) {
           return {
             ...food,
-            qty: parseInt(action.qty) + food.qty,
-            price: action.price + food.price,
+            qty: parseInt(food.qty) + parseInt(action.qty), // ✅ fixed qty addition
+            price: food.price + action.price,
           };
         }
         return food;
       });
 
     default:
-      console.log("Error in Reducer");
+      console.error("Error in Reducer: Unknown action type", action.type);
+      return state;
   }
 };
 
